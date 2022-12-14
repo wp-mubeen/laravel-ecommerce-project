@@ -42,6 +42,16 @@
 
                                     <ul class="submenu lang" >
                                         <li class="menu-item" >
+                                            <a class="dropdown-item" href="/profile">Profile</a>
+                                        </li>
+                                        <li class="menu-item" >
+                                            <a class="dropdown-item" href="/admin/categories">Manage Categories</a>
+                                        </li>
+                                        <li class="menu-item" >
+                                            <a class="dropdown-item" href="/admin/products">Manage Products</a>
+                                        </li>
+
+                                        <li class="menu-item" >
                                          <a class="dropdown-item" href="{{ route('logout') }}"
                                            onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -170,7 +180,7 @@
                     <div class="container">
                         <ul class="nav primary clone-main-menu" id="mercado_main" data-menuname="Main menu" >
                             <li class="menu-item home-icon">
-                                <a href="home" class="link-term mercado-item-title"><i class="fa fa-home" aria-hidden="true"></i></a>
+                                <a href="{{url('/home')}}" class="link-term mercado-item-title"><i class="fa fa-home" aria-hidden="true"></i></a>
                             </li>
                             <li class="menu-item">
                                 <a href="about-us" class="link-term mercado-item-title">About Us</a>

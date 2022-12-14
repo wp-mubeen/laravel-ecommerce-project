@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use File;
+
+use App\Models\ModelCategories;
 use App\Models\ModelProducts;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,13 @@ class ProductsController extends Controller
     public function index()
     {
         $products = ModelProducts::all();
+
+        return view ('admin.products.index',compact('products' ));
+    }
+
+    public function shop()
+    {
+        $products = ModelProducts::all();
         return view ('products.index',compact('products'));
     }
 
@@ -29,9 +37,10 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        $userId = Auth::id();
+        $uid = Auth::id();
+        $categories = ModelCategories::all();
 
-        return view ('products.create')->with('uid', $userId);
+       return view ('admin.products.create',compact('uid', 'categories'));
     }
 
     /**
@@ -42,17 +51,37 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = $request->validate([
             'name' => 'required',
             'price' => 'required',
+            'product_img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $userId = Auth::id();
+        if($request->file('product_img')) {
+            $file = $request->file('product_img');
+            $filename = time().'_'.$file->getClientOriginalName();
+
+            // File upload location
+            $location = 'uploads/products';
+
+            // Upload file
+            $fileobject = $file->move($location,$filename);
+
+
+            $fileUrl = $fileobject->getLinkTarget();
+
+        }else{
+            $fileUrl = '';
+        }
+
+        $request->request->add(['image' => $location.'/'.$filename]);
+
         $input = $request->all();
 
-        //dd($input);
+
         ModelProducts::create($input);
-        return redirect('products')->with('flash_message', 'Product Addedd!');
+
+        return back()->with('success','Product added successfully!');
     }
 
     /**
@@ -75,12 +104,19 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit( ModelProducts $ModelProducts)
+    public function edit( $id )
     {
        // dd($ModelProducts);
         //$product = ModelProducts::find($id);
       //  return view('products.edit')->with('product', $product);
-        return view('products.edit', ['product' => $ModelProducts]);
+        $uid = Auth::id();
+        $categories = ModelCategories::all();
+        $productSingle = ModelProducts::find($id);
+
+        return view('admin.products.edit',  compact( 'productSingle','uid', 'categories') );
+
+
+        return view ('admin.products.edit',compact('uid', 'categories'));
     }
 
     /**
@@ -95,7 +131,7 @@ class ProductsController extends Controller
         $product = ModelProducts::find($id);
         $input = $request->all();
         $product->update($input);
-        return redirect('products')->with('flash_message', 'student Updated!');
+        return redirect('products')->with('flash_message', 'Product Updated!');
     }
 
     /**
@@ -107,6 +143,6 @@ class ProductsController extends Controller
     public function destroy($id)
     {
         ModelProducts::destroy($id);
-        return redirect('products')->with('flash_message', 'Student deleted!');
+        return redirect('products')->with('flash_message', 'Product deleted!');
     }
 }

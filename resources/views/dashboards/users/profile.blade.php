@@ -7,7 +7,7 @@
 			<div class="profile-sidebar">
 				<!-- SIDEBAR USERPIC -->
 				<div class="profile-userpic">
-					<img img="uu" src="{{  Auth::user()->picture  }}" class="img-responsive" alt="">
+					<img img="uu333" src="{{ $urlImg  }}" class="img-responsive" alt="">
 				</div>
 				<!-- END SIDEBAR USERPIC -->
 				<!-- SIDEBAR USER TITLE -->
@@ -16,7 +16,7 @@
                     {{ Auth::user()->name }}
 					</div>
 					<div class="profile-usertitle-job">
-						Developer {{  Auth::user()->picture }}
+						Developer
 					</div>
 				</div>
 
@@ -32,7 +32,7 @@
                 @endif
 
                 <div class="card-body">
-                    <form method="POST" action{{ url('profile/' ) }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ url('profile/' ) }}" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" value="{{ Auth::user()->id }}" name="id" >
                         <div class="row mb-3">
@@ -70,10 +70,10 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="favoriteColor" class="col-md-4 col-form-label text-md-end">Favorite Color</label>
+                            <label for="favoriteColor" class="col-md-4 col-form-label text-md-end">Upload File</label>
                             <div class="col-md-6">
-                                <input id="picture" type="file" class="form-control @error('favoritecolor') is-invalid @enderror" name="picture_file"  >
-                                <span class="text-danger">@error('favoritecolor'){{ $message }}@enderror</span>
+                                <input id="picture" type="file" class="form-control @error('picture_file') is-invalid @enderror" name="picture_file"  >
+                                <span class="text-danger">@error('picture_file'){{ $message }}@enderror</span>
                             </div>
                         </div>
 

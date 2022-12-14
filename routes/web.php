@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\CategoriesController;
 use App\Models\ModelProducts;
 use App\Models\User;
 
@@ -38,8 +39,9 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 // put method to update the resource
 // post method to create the resource
 Route::post('/profile/', [UserController::class, 'update']);
-Route::view('/profile', 'dashboards.users.profile' )->middleware('auth');
-//Route::get('/profile', [UserController::class, 'profile'])->middleware('auth');
+//Route::view('/profile', 'dashboards.users.profile' )->middleware('auth');
+Route::get('/profile', [UserController::class, 'profile'])->middleware('auth');
+
 
 Route::redirect('/here', '/profile');
 
@@ -63,11 +65,29 @@ Route::scopeBindings()->group(function () {
         return $post;
     });
 });
+Route::middleware(['auth'])->name('admin.')->prefix('admin')->group(function(){
+    Route::get('/products',[ProductsController::class,'index']);
+    Route::post('/products',[ProductsController::class,'store']);
+    Route::get('/product/add',[ProductsController::class,'create'])->name('create');
+    Route::get('/product/edit/{id}',[ProductsController::class,'edit'])->where(['id'=>'[0-9]+']);
+    Route::patch('/product/{id}',[ProductsController::class,'update']);
+
+    Route::delete('products/{id}',[ProductsController::class,'destroy']);
 
 
+    Route::get('/categories',[CategoriesController::class,'index']);
+    Route::post('/categories',[CategoriesController::class,'store']);
+    Route::get('/category/create',[CategoriesController::class,'create']);
+    Route::get('/category/edit/{id}',[CategoriesController::class,'edit'])->where(['id'=>'[0-9]+']);
+    Route::patch('/categories/{id}',[CategoriesController::class,'update']);
+
+    Route::delete('categories/{id}',[CategoriesController::class,'destroy']);
+});
+
+//Route::get('/products',[ProductsController::class,'shop']);
 Route::prefix('/products' )->group(function () {
 
-    Route::get('/', [ProductsController::class,'index'])->name('all');
+   Route::get('/', [ProductsController::class,'shop'])->name('all');
 
     Route::get('/{ModelProducts}/edit', [ProductsController::class,'edit'])->where(['id'=>'[0-9]+']);
     Route::get('/{id}', [ProductsController::class,'show'])->where(['id' => '[0-9]+']);

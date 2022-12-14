@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ModelCategories;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
-class AboutUsController extends Controller
+class CategoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,7 +15,8 @@ class AboutUsController extends Controller
      */
     public function index()
     {
-        //
+       $allCategories = ModelCategories::all();
+       return view('admin.categories.index',compact('allCategories'));
     }
 
     /**
@@ -23,7 +26,7 @@ class AboutUsController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.categories.create');
     }
 
     /**
@@ -34,7 +37,20 @@ class AboutUsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required'
+        ]);
+
+
+       $catslug = Str::slug($request->input('name'), "-");
+
+       $data = [
+           'name'=>$request['name'],
+           'slug' => $catslug
+       ];
+
+       ModelCategories::create($data);
+        return redirect('admin/categories')->with('flash_message', 'Category Added!');
     }
 
     /**
@@ -56,7 +72,9 @@ class AboutUsController extends Controller
      */
     public function edit($id)
     {
-        //
+
+        $category = ModelCategories::find($id);
+        return view('admin.categories.edit',compact('category'));
     }
 
     /**
@@ -68,7 +86,12 @@ class AboutUsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $category = ModelCategories::find($id);
+        $inputData = $request->all();
+        $category->update($inputData);
+
+
+        return redirect('admin/categories')->with('flash_message', 'Category Updated!');
     }
 
     /**
@@ -79,6 +102,7 @@ class AboutUsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        ModelCategories::destroy($id);
+        return redirect('admin/categories')->with('flash_message', 'Category deleted!');
     }
 }
