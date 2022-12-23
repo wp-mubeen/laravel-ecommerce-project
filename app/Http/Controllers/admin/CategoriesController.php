@@ -1,8 +1,9 @@
 <?php
+namespace App\Http\Controllers\admin;
 
-namespace App\Http\Controllers;
-
+use App\Http\Controllers\Controller;
 use App\Models\ModelCategories;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -16,7 +17,8 @@ class CategoriesController extends Controller
     public function index()
     {
        $allCategories = ModelCategories::all();
-       return view('admin.categories.index',compact('allCategories'));
+        $user = auth()->user();
+       return view('admin.categories.index',['allCategories' => $allCategories, 'user' => $user ]);
     }
 
     /**
@@ -26,7 +28,10 @@ class CategoriesController extends Controller
      */
     public function create()
     {
-        return view('admin.categories.create');
+        $user = auth()->user();
+
+        $allCategories = ModelCategories::all();
+        return view('admin.categories.create',['allCategories' => $allCategories, 'user' => $user ]);
     }
 
     /**
@@ -44,13 +49,11 @@ class CategoriesController extends Controller
 
        $catslug = Str::slug($request->input('name'), "-");
 
-       $data = [
-           'name'=>$request['name'],
-           'slug' => $catslug
-       ];
 
-       ModelCategories::create($data);
-        return redirect('admin/categories')->with('flash_message', 'Category Added!');
+        $request->request->add(['slug' => $catslug]);
+        $input = $request->all();
+        ModelCategories::create($input);
+        return redirect('admin/categories')->with('message', 'Category Added!');
     }
 
     /**
@@ -72,9 +75,11 @@ class CategoriesController extends Controller
      */
     public function edit($id)
     {
-
+        $user = auth()->user();
         $category = ModelCategories::find($id);
-        return view('admin.categories.edit',compact('category'));
+
+        $allCategories = ModelCategories::all();
+        return view('admin.categories.edit',['allCategories' => $allCategories, 'category'=>$category , 'user' => $user ]);
     }
 
     /**
@@ -86,12 +91,21 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required'
+        ]);
+
         $category = ModelCategories::find($id);
+
+        $catslug = Str::slug($request->input('name'), "-");
+
+        $request->request->add(['slug' => $catslug]);
         $inputData = $request->all();
+
         $category->update($inputData);
 
 
-        return redirect('admin/categories')->with('flash_message', 'Category Updated!');
+        return redirect('admin/categories')->with('message', 'Category Updated!');
     }
 
     /**
@@ -103,6 +117,6 @@ class CategoriesController extends Controller
     public function destroy($id)
     {
         ModelCategories::destroy($id);
-        return redirect('admin/categories')->with('flash_message', 'Category deleted!');
+        return redirect('admin/categories')->with('message', 'Category deleted!');
     }
 }

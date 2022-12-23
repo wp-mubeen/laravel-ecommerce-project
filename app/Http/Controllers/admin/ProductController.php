@@ -1,16 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\admin;
 
-
+use App\Http\Controllers\Controller;
+use App\Http\Requests\AddProductRequest;
 use App\Models\ModelCategories;
 use App\Models\ModelProducts;
+use App\Models\User;
+use App\Policies\ListPolicy;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 
-class ProductsController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,15 +23,33 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $products = ModelProducts::all();
 
-        return view ('admin.products.index',compact('products' ));
+
+        $this->authorize('view',User::class);
+        $products = ModelProducts::paginate(10);
+
+        $user = auth()->user();
+
+
+
+        return view ('admin.products.index',['products' => $products, 'user' => $user  ]);
     }
 
     public function shop()
     {
-        $products = ModelProducts::all();
-        return view ('products.index',compact('products'));
+       // $products = DB::table('products')->where('cate_id', '2')->paginate();
+
+        /* $products = DB::table('products')
+            ->join('categories', 'categories.id', '=', 'products.cate_id')
+            ->where('categories.slug', '=', 'store')
+            ->select('products.*')
+           ->paginate('12');*/
+        //dd($products);
+        $products = ModelProducts::paginate(12);
+
+        $Categories = DB::table('categories')->where('parent_catg','=', 0 )->get();
+
+        return view ('products.index',compact('products', 'Categories') );
     }
 
     /**
@@ -37,10 +59,12 @@ class ProductsController extends Controller
      */
     public function create()
     {
+        $this->authorize('create',User::class);
         $uid = Auth::id();
         $categories = ModelCategories::all();
+        $user = auth()->user();
 
-       return view ('admin.products.create',compact('uid', 'categories'));
+       return view ('admin.products.create',compact('uid', 'categories' , 'user'));
     }
 
     /**
@@ -49,13 +73,13 @@ class ProductsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AddProductRequest $request)
     {
-        $validator = $request->validate([
+       /* $validator = $request->validate([
             'name' => 'required',
             'price' => 'required',
             'product_img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
+        ]);*/
 
         if($request->file('product_img')) {
             $file = $request->file('product_img');
@@ -94,7 +118,8 @@ class ProductsController extends Controller
     {
         $product = ModelProducts::find($id);
       // dd($product);
-       return view('products.show')->with('product', $product);
+        $user = auth()->user();
+       return view('products.show')->with('product', $product, );
 
     }
 
@@ -106,17 +131,17 @@ class ProductsController extends Controller
      */
     public function edit( $id )
     {
-       // dd($ModelProducts);
-        //$product = ModelProducts::find($id);
-      //  return view('products.edit')->with('product', $product);
         $uid = Auth::id();
+        $this->authorize('edit',User::class);
+
+        $user = auth()->user();
+
         $categories = ModelCategories::all();
         $productSingle = ModelProducts::find($id);
 
-        return view('admin.products.edit',  compact( 'productSingle','uid', 'categories') );
+        return view('admin.products.edit',  compact( 'user','productSingle','uid', 'categories') );
 
 
-        return view ('admin.products.edit',compact('uid', 'categories'));
     }
 
     /**
@@ -128,10 +153,12 @@ class ProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('update',User::class);
+
         $product = ModelProducts::find($id);
         $input = $request->all();
         $product->update($input);
-        return redirect('products')->with('flash_message', 'Product Updated!');
+        return redirect(url('/admin/products') )->with('message', 'Product Updated!');
     }
 
     /**
@@ -142,7 +169,8 @@ class ProductsController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('delete',User::class);
         ModelProducts::destroy($id);
-        return redirect('products')->with('flash_message', 'Product deleted!');
+        return redirect(url('/admin/products'))->with('message', 'Product deleted!');
     }
 }

@@ -1,9 +1,13 @@
-@extends('layouts.app')
+@extends('admin.top-and-sidebar')
 @section('content')
     <div class="container">
         <div class="row">
-
-            <div class="col-md-9">
+            @if(Session::has('message'))
+                <div class="col-md-12 mt-4" >
+                    <p class="alert alert-info">{{ Session::get('message') }}</p>
+                </div>
+            @endif
+            <div class="col-md-12 mt-4">
                 <div class="card">
                     <div class="card-header">
                         <h2>Add New Products</h2>
@@ -35,7 +39,7 @@
                                         <td>{{ $item->description }}</td>
 
                                         <td>
-                                            <a href="{{ url('admin/products/' . $item->id) }}" title="View Product"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
+                                            <a href="{{ url('/products/' . $item->id) }}" title="View Product"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/admin/product/edit/' . $item->id ) }}" title="Edit Product"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
 
                                             <form method="POST" action="{{ url('/admin/products' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
@@ -50,9 +54,14 @@
                             </table>
                         </div>
 
+                        {{ $products->links() }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script src="{{ asset('assets/admin/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/raphael-min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/morris.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/bootstrap.min.js') }}"></script>
 @endsection

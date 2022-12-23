@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string("name");
             $table->string("email");
-            $table->string("role");
+            $table->boolean("is_admin")->default(false);
             $table->string("favoritecolor")->nullable();
             $table->string("picture")->nullable();
             $table->string("password");

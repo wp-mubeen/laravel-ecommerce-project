@@ -12,14 +12,21 @@ class UserController extends Controller
     public function profile(){
         Auth::routes();
         $userid =  Auth::user()->id;
-
-
+        $checkadmin =  Auth::user()->is_admin;
 
         $userinfo = User::find($userid, 'picture');
         $urlImg =  $userinfo->picture;
 
+        $user = auth()->user();
 
-        return view ('dashboards.users.profile',compact('urlImg'));
+        if( $checkadmin == 1 ){
+            return view ('admin.profile',['urlImg' => $urlImg, 'user' => $user]);
+        }else{
+            return view ('dashboards.users.profile',compact('urlImg'));
+        }
+
+
+
     }
 
     public function update(Request $request){

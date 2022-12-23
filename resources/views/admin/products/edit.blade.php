@@ -1,9 +1,8 @@
-@extends('layouts.app')
+@extends('admin.top-and-sidebar')
 @section('content')
-
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 mt-4">
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
@@ -13,9 +12,10 @@
                         </ul>
                     </div>
                 @endif
-                @if(Session::has('success'))
-                    <div class="alert alert-success">
-                        {{Session::get('success')}}
+
+                @if(Session::has('message'))
+                    <div class="col-md-12 mt-4" >
+                        <p class="alert alert-info">{{ Session::get('message') }}</p>
                     </div>
                 @endif
 
@@ -33,7 +33,9 @@
                                 @if($categories)
                                     <select class="form-control" name="cate_id">
                                         @foreach($categories as $item)
-                                            <option value="{{ $item->id }}">{{$item->name}}</option>
+                                            <option value="{{ $item->id }}" @if (  $item->id ==  $productSingle->cate_id )
+                                                {{'selected="selected"'}}
+                                                @endif >{{$item->name}}</option>
                                         @endforeach
                                     </select>
                                 @endif
@@ -134,7 +136,7 @@
                         <hr>
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" class="btn btn-primary">Update</button>
                             </div>
                         </div>
                     </form>
@@ -143,5 +145,8 @@
             </div>
         </div>
     </div>
-
+    <script src="{{ asset('assets/admin/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/raphael-min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/morris.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/bootstrap.min.js') }}"></script>
 @stop

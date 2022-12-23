@@ -17,20 +17,20 @@ class CreateProductsTable extends Migration
             $table->id();
 
             $table->integer("user_id");
-            $table->bigInteger("cate_id");
+            $table->bigInteger("cate_id")->nullable(true);
             $table->string("name");
-            $table->mediumText("small_description");
-            $table->longText("description");
-            $table->string("selling_price");
+            $table->mediumText("small_description")->nullable(true);
+            $table->longText("description")->nullable(true);
+            $table->string("selling_price")->nullable(true);
             $table->string("price");
-            $table->string("image");
-            $table->string("qty");
-            $table->string("tax");
+            $table->string("image")->nullable(true);
+            $table->string("qty")->nullable(true);
+            $table->string("tax")->nullable(true);
             $table->tinyInteger("status");
-            $table->tinyInteger("trending");
-            $table->mediumText("meta_title");
-            $table->mediumText("meta_keywords");
-            $table->mediumText("meta_description");
+            $table->tinyInteger("trending")->nullable(true);
+            $table->mediumText("meta_title")->nullable(true);
+            $table->mediumText("meta_keywords")->nullable(true);
+            $table->mediumText("meta_description")->nullable(true);
 
             $table->timestamps();
         });

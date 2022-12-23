@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="container">
-  <div class="row">
+  <div class="row mt-4">
       <h3><a href="{{route('all')}}">Back to all listing</a> </h3>
   <div class="card">
     <div class="card-header">Product Detail</div>

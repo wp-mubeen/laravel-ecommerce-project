@@ -1,8 +1,15 @@
-@extends('layouts.app')
+@extends('admin.top-and-sidebar')
 @section('content')
-    <div class="container">
-        <div class="row">
-
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row mt-4">
+            @if(Session::has('message'))
+                <div class="col-md-12">
+                    <div class="alert alert-success">
+                        {{Session::get('message')}}
+                    </div>
+                </div>
+            @endif
             <div class="col-md-9">
                 <div class="card">
                     <div class="card-header">
@@ -49,4 +56,10 @@
             </div>
         </div>
     </div>
+</div>
+    <!-- /#page-wrapper -->
+    <script src="{{ asset('assets/admin/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/raphael-min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/morris.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/bootstrap.min.js') }}"></script>
 @endsection

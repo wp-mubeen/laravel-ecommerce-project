@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use App\Policies\ListPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -14,6 +16,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        User::class => ListPolicy::class,
     ];
 
     /**
@@ -25,6 +28,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+//        Gate::define('list_view',function (User $user){ return $user->is_admin; });
+//        Gate::define('list_create',function (User $user){ return $user->is_admin; });
+//        Gate::define('list_edit',function (User $user){ return $user->is_admin; });
+//        Gate::define('list_delete',function (User $user){ return $user->is_admin; });
+
     }
 }

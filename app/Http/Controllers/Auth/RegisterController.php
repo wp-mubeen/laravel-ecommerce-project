@@ -57,6 +57,7 @@ class RegisterController extends Controller
         ]);
     }
 
+
     /**
      * Create a new user instance after a valid registration.
      *
@@ -68,7 +69,7 @@ class RegisterController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'role'=> 2,
+            'is_admin'=> 0,
             'favoritecolor'=>$data['favoritecolor'],
             'password' => Hash::make($data['password']),
         ]);
