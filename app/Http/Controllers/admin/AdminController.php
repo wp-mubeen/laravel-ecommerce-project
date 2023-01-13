@@ -18,6 +18,7 @@ class AdminController extends Controller
      */
     public function index()
     {
+
        $allUsers = User::all();
 
        $user = auth()->user();

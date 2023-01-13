@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        /*$Faker = Faker::create();
+        $Faker = Faker::create();
 
         for($i = 0; $i<= 100; $i ++){
             User::insert([
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
                 'is_admin' => '0',
                 'password' => Hash::make('12345678')
             ]);
-        }*/
+        }
 
         DB::table('users')->insert([
             'name' => 'admin',

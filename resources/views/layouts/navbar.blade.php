@@ -135,11 +135,19 @@
                                 </div>
                             </a>
                         </div>
+                        @php
+                            if( session('cart') ){
+                                $totatitem = count(session('cart'));
+                            }else{
+                                $totatitem = 0;
+                            }
+
+                        @endphp
                         <div class="wrap-icon-section minicart">
-                            <a href="#" class="link-direction">
+                            <a href="{{ url('/cart') }}" class="link-direction">
                                 <i class="fa fa-shopping-basket" aria-hidden="true"></i>
                                 <div class="left-info">
-                                    <span class="index">4 items</span>
+                                    <span class="index">{{ $totatitem }} items</span>
                                     <span class="title">CART</span>
                                 </div>
                             </a>
@@ -176,19 +184,19 @@
                                 <a href="{{url('/home')}}" class="link-term mercado-item-title"><i class="fa fa-home" aria-hidden="true"></i></a>
                             </li>
                             <li class="menu-item">
-                                <a href="about-us" class="link-term mercado-item-title">About Us</a>
+                                <a href="{{ url('/about-us') }}" class="link-term mercado-item-title">About Us</a>
                             </li>
                             <li class="menu-item">
-                                <a href="products" class="link-term mercado-item-title">Shop</a>
+                                <a href="{{ url('/products') }}" class="link-term mercado-item-title">Shop</a>
                             </li>
                             <li class="menu-item">
-                                <a href="cart" class="link-term mercado-item-title">Cart</a>
+                                <a href="{{ url('/cart') }}" class="link-term mercado-item-title">Cart</a>
                             </li>
                             <li class="menu-item">
-                                <a href="checkout" class="link-term mercado-item-title">Checkout</a>
+                                <a href="{{ url('/checkout') }}" class="link-term mercado-item-title">Checkout</a>
                             </li>
                             <li class="menu-item">
-                                <a href="contact-us" class="link-term mercado-item-title">Contact Us</a>
+                                <a href="{{ url('/contact-us') }}" class="link-term mercado-item-title">Contact Us</a>
                             </li>
                         </ul>
                     </div>

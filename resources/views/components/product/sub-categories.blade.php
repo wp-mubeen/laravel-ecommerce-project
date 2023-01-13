@@ -1,7 +1,8 @@
-
-    <span class="toggle-control">+444</span>
+@if (count($subcategory) >= 1)
+    <span class="toggle-control">+</span>
     <ul class="sub-cate  mmmoore">
-        <li class="category-item"><a href="#" class="cate-link">dfklsfkls Batteries  44 4(22)</a></li>
-        <li class="category-item"><a href="#" class="cate-link">Headsets (16)</a></li>
-        <li class="category-item"><a href="#" class="cate-link">Screen (28)</a></li>
+        @foreach($subcategory as $catg)
+            <li class="category-item"><a href="{{ $catg['slug'] }}" class="cate-link">{{ $catg['name'] }}</a></li>
+        @endforeach
     </ul>
+@endif

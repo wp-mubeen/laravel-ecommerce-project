@@ -1,0 +1,272 @@
+openapi: 3.0.0
+info:
+  title: Swagger Documentation API
+  description: Here goes description
+  version: 0.1.9
+
+servers:
+  - url: https://ecommerce.test/api
+    description: local server
+  - url: https://ecommerce.test/api
+    description: production server
+
+paths:
+  /register:
+    post:
+      summary: Create user 
+      description: This can only be done by the logged in user.
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+  /login:
+    post:
+      summary: Log in user into the system
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:      # Request body contents
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: john@gmail.com
+                password:
+                  type: string
+                  example: 12345
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/xml:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Invalid username/password supplied
+  /logoutuser:
+    post:
+      summary: Log out current logged in user session
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            Authorization:
+              bearer_token
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: UnauthorizedError
+        '404':
+          description: Not found
+      security:
+        - bearer_token:
+            - write:products
+            - read:products
+  /product:
+    get:
+      summary: Returns a list of products.
+      responses:
+        '200':
+          description: A JSON array of products data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: No data found!
+        '404':
+          description: Not found
+  /product/{ProductId}:
+    get:
+      summary: Find product by ID
+      description: Returns a single Product
+      parameters:
+        - name: ProductId
+          in: path
+          description: ID of product to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Product not found
+      security:
+        - bearer_token:
+            - write:products
+            - read:products
+  /product/{PId}:
+    put:
+      summary: Update product in the store with data
+      description: 'Update product in the store with data'
+      parameters:
+        - name: PId
+          in: path
+          description: ID of product that needs to be updated
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:      # Request body contents
+              type: object
+              properties:
+                name:
+                  type: string
+                  required: true
+                  example: "testing product"
+                price:
+                  type: integer
+                qty:
+                  type: integer
+                description:
+                  type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Product not found
+      security:
+        - bearerAuth:
+            - write:products
+            - read:products
+  /product/add:
+    post:
+      summary: Adds a new product
+      requestBody:
+        content:
+          application/json:
+            schema:      # Request body contents
+              type: object
+              properties:
+                name:
+                  type: string
+                  required: true
+                price:
+                  type: integer
+                qty:
+                  type: integer
+                description:
+                  type: string
+                user_id:
+                  type: integer
+              
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Product not found
+  /product/{Id}:
+    delete:
+      tags:
+        - Delete Product
+      summary: Delete Product
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+        - name: Id
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid product id supplied
+        '404':
+          description: Product not found
+
+ 
+
+  
+components:
+  schemas:
+    User:
+        type: object
+        properties:
+          name:
+            type: string
+            example: john
+          email:
+            type: string
+            example: john@gmail.com
+          password:
+            type: string
+            example: '12345'
+          password_confirmation:
+            type: string
+            example: '12345'
+        xml:
+          name: user
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_k
+      in: header
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      name: tokencode
+      scheme: bearer
+      in: header

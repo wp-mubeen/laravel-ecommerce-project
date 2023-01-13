@@ -52,4 +52,8 @@ class User extends Authenticatable
             return asset('users/images/no-image.png');
         }
     }
+
+    public function profile(){
+        return $this->hasOne(Profile::class);
+    }
 }

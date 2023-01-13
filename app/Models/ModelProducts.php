@@ -17,6 +17,7 @@ class ModelProducts extends Model
         'user_id',
         'cate_id',
         'name',
+        'slug',
         'small_description',
         'description',
         'selling_price',
@@ -30,5 +31,7 @@ class ModelProducts extends Model
         'meta_keywords',
         'meta_description',
     ];
+
+
 
 }

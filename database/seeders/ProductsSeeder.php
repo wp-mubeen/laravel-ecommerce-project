@@ -23,10 +23,16 @@ class ProductsSeeder extends Seeder
 
         $Faker = Faker::create();
         for($i = 0; $i<= 100; $i ++){
+            $title = $Faker->unique()->name;
+            // strip out all whitespace
+            $ptitle = str_replace(' ', '-', $title);
+            // convert the string to all lowercase
+            $p_slug = strtolower($ptitle);
             ModelProducts::insert([
                 'user_id' => '1',
                 'cate_id' => '1',
-                'name' => $Faker->unique()->name,
+                'name' => $title,
+                'slug' => $p_slug,
                 'small_description' => $Faker->paragraph,
                 'description' => $Faker->paragraph,
                 'price' => '20',
@@ -34,17 +40,7 @@ class ProductsSeeder extends Seeder
                 'qty' => $Faker->numberBetween(1,20),
                 'status' => '1'
             ]);
-//            DB::table('products')->insert([
-//                'user_id' => '1',
-//                'cate_id' => '1',
-//                'name' => $Faker->unique()->name,
-//                'small_description' => $Faker->paragraph,
-//                'description' => $Faker->paragraph,
-//                'price' => '20',
-//                'image' => $Faker->imageUrl,
-//                'qty' => $Faker->numberBetween(1,20),
-//                'status' => '1',
-//            ]);
+
 
         }
 

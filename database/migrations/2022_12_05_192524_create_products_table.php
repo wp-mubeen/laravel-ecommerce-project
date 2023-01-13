@@ -19,6 +19,7 @@ class CreateProductsTable extends Migration
             $table->integer("user_id");
             $table->bigInteger("cate_id")->nullable(true);
             $table->string("name");
+            $table->string("slug");
             $table->mediumText("small_description")->nullable(true);
             $table->longText("description")->nullable(true);
             $table->string("selling_price")->nullable(true);

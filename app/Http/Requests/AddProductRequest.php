@@ -25,8 +25,8 @@ class AddProductRequest extends FormRequest
     {
         return [
             'name' => ['required','string','max:40'],
-            'price' => ['required','integer'] ,
-            'selling_price' => ['required','numeric','gt:price'],
+            'price' => ['required','numeric','gt:selling_price'],
+            'selling_price' => ['required','numeric'],
             'product_img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }

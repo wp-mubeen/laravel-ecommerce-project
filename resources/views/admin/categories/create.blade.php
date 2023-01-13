@@ -18,7 +18,7 @@
                         @endif
                         <form action="{{ url('admin/categories') }}" method="post">
                             {!! csrf_field() !!}
-                            @if(count($allCategories) > 1)
+                            @if(count($allCategories) >= 1)
                                 <label>Parent Category Name</label></br>
                                 <select name="parent_catg" id="parent_catg" class="form-control" >
                                     <option value="0">Select Category</option>

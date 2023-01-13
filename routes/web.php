@@ -21,9 +21,9 @@ use App\Models\User;
 |
 */
 
-
-Route::get('users2', [AdminController::class, 'listUsers'])->name('users2.listUsers');
-
+Route::get('/swagger',function (){
+    return view('swagger');
+});
 Route::get('/', function () {
     return view('welcome');
 })->middleware('check-year');
@@ -47,7 +47,6 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 // put method to update the resource
 // post method to create the resource
 Route::post('/profile/', [UserController::class, 'update']);
-//Route::view('/profile', 'dashboards.users.profile' )->middleware('auth');
 Route::get('/profile', [UserController::class, 'profile'])->middleware('auth');
 
 Route::group(['middleware' => 'auth'],function (){
@@ -61,6 +60,8 @@ Route::group(['middleware' => 'auth'],function (){
         Route::get('/all-users', [AdminController::class,'listUsers']);
 
 
+        Route::get('/all-comments', [ProductController::class,'ListComments']);
+        Route::post('/all-comments',[ProductController::class,'updateComment']);
 
         Route::get('/products',[ProductController::class,'index']);
         Route::post('/products',[ProductController::class,'store']);
@@ -84,9 +85,13 @@ Route::group(['middleware' => 'auth'],function (){
 });
 
 
-Route::get('/product/{single:name}', function (ModelProducts $single) {
-    return $single;
-});
+
+Route::get('/product/{single:slug}', [ProductController::class,'show']);
+Route::post('/product/{single:slug}', [ProductController::class,'PostComments']);
+Route::get('/cart', [ProductController::class,'cart']);
+Route::get('/add-to-cart/{id}', [ProductController::class,'AddToCart']);
+Route::patch('/update-cart', [ProductController::class,'UpdateCart']);
+Route::delete('/remove-from-cart', [ProductController::class,'RemovedFromCart']);
 
 
 //public root

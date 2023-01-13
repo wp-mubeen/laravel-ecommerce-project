@@ -31,6 +31,9 @@
                     <a href="{{ url('admin/products') }}"><i class="fa fa-fw fa-bar-chart-o"></i> Products</a>
                 </li>
                 <li>
+                    <a href="{{ url('admin/all-comments') }}"><i class="fa fa-fw fa-bar-chart-o"></i> Product Comments</a>
+                </li>
+                <li>
                     <a href="{{ url('admin/categories') }}"><i class="fa fa-fw fa-table"></i> Categories</a>
                 </li>
                 <li>
