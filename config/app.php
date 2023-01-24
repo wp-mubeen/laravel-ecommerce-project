@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://ecommerce.test'),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -177,6 +177,8 @@ return [
 
         Yajra\DataTables\DataTablesServiceProvider::class,
 
+        Barryvdh\DomPDF\ServiceProvider::class,
+
     ],
 
     /*
@@ -232,6 +234,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+
+        'PDF' => Barryvdh\DomPDF\Facade::class,
 
     ],
 

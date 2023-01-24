@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddProductRequest;
+use App\Models\CartModel;
 use App\Models\ModelCategories;
 use App\Models\ModelComments;
 use App\Models\ModelProducts;
@@ -17,11 +18,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    public function listProducts(){
-        $products = ModelProducts::all();
-        return PostResource::collection($products);
 
-    }
     /**
      * Display a listing of the resource.
      *
@@ -29,7 +26,6 @@ class ProductController extends Controller
      */
     public function index()
     {
-
         $this->authorize('view',User::class);
         $products = ModelProducts::paginate(10);
 
@@ -52,6 +48,8 @@ class ProductController extends Controller
         }
 
         $cart = session()->get('cart');
+        $uid = Auth::id();
+
 
         // if cart is empty then this the first product
         if(!$cart) {
@@ -59,6 +57,7 @@ class ProductController extends Controller
             $cart = [
                 $id => [
                     "name" => $product->name,
+                    "product_id" => $product->id,
                     "quantity" => 1,
                     "price" => $product->price,
                     "photo" => $product->photo
@@ -77,6 +76,7 @@ class ProductController extends Controller
 
             session()->put('cart', $cart);
 
+
             return redirect()->back()->with('success', 'Product added to cart successfully!');
 
         }
@@ -84,12 +84,21 @@ class ProductController extends Controller
         // if item not exist in cart then add to cart with quantity = 1
         $cart[$id] = [
             "name" => $product->name,
+            "product_id" => $product->id,
             "quantity" => 1,
             "price" => $product->price,
             "photo" => $product->image
         ];
 
         session()->put('cart', $cart);
+
+        // commit code and deleted migration file but can be used in future if need.
+       /* $data = [
+            "user_id" => $uid,
+            "prod_id" => $product->id,
+            "quantity" => $cart[$id]['quantity']++,
+        ];
+        CartModel::create($data);*/
 
         return redirect()->back()->with('success', 'Product added to cart successfully!');
     }
@@ -114,7 +123,6 @@ class ProductController extends Controller
         if($request->id) {
 
             $cart = session()->get('cart');
-
             if(isset($cart[$request->id])) {
 
                 unset($cart[$request->id]);

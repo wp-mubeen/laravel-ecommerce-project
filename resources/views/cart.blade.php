@@ -65,9 +65,9 @@
             <div class="order-summary">
                 <h4 class="title-box">Order Summary</h4>
 
-                <p class="summary-info"><span class="title">Subtotal</span><b class="index">${{ $total }}</b></p>
-                <p class="summary-info"><span class="title">Shipping</span><b class="index">Free Shipping</b></p>
-                <p class="summary-info total-info "><span class="title">Total</span><b class="index">${{ $total }}</b></p>
+                <p class="summary-info"><b class="title">Subtotal</b><b class="index">${{ $total }}</b></p>
+                <p class="summary-info"><b class="title">Shipping</b><b class="index">Free Shipping</b></p>
+                <p class="summary-info total-info "><b class="title">Total</b><b class="index">${{ $total }}</b></p>
             </div>
             <div class="checkout-info">
                 <a class="btn btn-checkout" href="{{ url('/checkout') }}">Check out</a>
@@ -80,9 +80,9 @@
 </div><!--end container-->
 
 
-<script src="assets/js/jquery-1.12.4.minb8ff.js?ver=1.12.4"></script>
-<script src="assets/js/owl.carousel.min.js"></script>
-<script src="assets/js/functions.js"></script>
+<script src="{{ asset('assets/js/jquery-1.12.4.minb8ff.js?ver=1.12.4')}}"></script>
+<script src="{{ asset('assets/js/owl.carousel.min.js')}}"></script>
+<script src="{{ asset('assets/js/functions.js')}}"></script>
 
 <script type="text/javascript">
     $( document ).ready(function() {

@@ -66,7 +66,7 @@
                             <a href="{{ url('add-to-cart/'. $product->id ) }}" class="btn add-to-cart">Add to Cart</a>
                             <div class="wrap-btn">
                                 <a href="#" class="btn btn-compare">Add Compare</a>
-                                <a href="#" class="btn btn-wishlist">Add Wishlist</a>
+                                <a href="javascript:void(0);" productid="{{ $product->id }}" class="btn btn-wishlist addtowishlist">Add Wishlist</a>
                             </div>
                         </div>
                     </div>
@@ -122,4 +122,31 @@
         </div><!--end row-->
 
     </div><!--end container-->
+    <script src="{{ asset('assets/js/jquery-1.12.4.minb8ff.js?ver=1.12.4')}}"></script>
+    <script>
+        $( document ).ready(function() {
+            $(".addtowishlist").click(function (e) {
+                e.preventDefault();
+
+                var product = $(this).attr('productid');
+
+                $.ajax({
+                    method: "post",
+                    url: "{{ url('/add-to-wishlist') }}",
+                    data: {_token: '{{ csrf_token() }}', pid: product },
+
+                    success: function (response) {
+                        alert(response.msg);
+                        //jQuery("#bodycontent").html(response.msg);
+                        //jQuery('#largeModal').modal('toggle');
+                    }
+                });
+            });
+            $("button.close").click(function (e) {
+                console.log('ddd');
+                jQuery('#largeModal').modal('toggle');
+            });
+        });
+
+    </script>
 @endsection

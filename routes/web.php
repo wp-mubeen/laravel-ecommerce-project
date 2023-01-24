@@ -6,8 +6,12 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\CategoriesController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\WishlistController;
 use App\Models\ModelProducts;
 use App\Models\User;
+use App\Mail\WelcomeMail;
+use Illuminate\Support\Facades\Mail;
 
 
 /*
@@ -44,10 +48,26 @@ Route::get('/logout', function(){
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
+Route::get('/email',function(){
+    Mail::to('mubeeniqbal82@gmail.com')->send(new WelcomeMail() );
+    return new WelcomeMail();
+} );
+
 // put method to update the resource
 // post method to create the resource
 Route::post('/profile/', [UserController::class, 'update']);
 Route::get('/profile', [UserController::class, 'profile'])->middleware('auth');
+
+Route::post('/add-to-wishlist', [WishlistController::class, 'add']);
+
+Route::middleware(['auth'])->group(function (){
+    Route::post('/add-to-wishlist', [WishlistController::class, 'add']);
+    Route::post('/remove-from-wishlist', [WishlistController::class, 'RemovedFromWishlist']);
+    Route::get('/wishlist', [WishlistController::class, 'index']);
+    Route::get('/checkout', [CheckoutController::class, 'index']);
+    Route::get('/thank-you', [CheckoutController::class, 'thankyou']);
+    Route::post('/place-order', [CheckoutController::class, 'PlaceOrder']);
+});
 
 Route::group(['middleware' => 'auth'],function (){
     Route::group([

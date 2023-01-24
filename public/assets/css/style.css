@@ -3,7 +3,7 @@
 
 Project:    Ecommerce
 Version:    1.0
-Last change:    23 July 2018 [Initial release]
+Last change:    01 january 2023 [Initial release]
 Assigned to:    team
 Primary use:    Ecommerce
 
@@ -70,6 +70,41 @@ button:hover, button:focus, button:visited, button:active{
 }
 .mercado-panel a{
     color: #666666;
+}
+ul.order_item{
+    padding-left:0px;
+    padding-top:20px;
+}
+li.order-items {
+    list-style: none;
+    display: flex;
+    width: 100%;
+    margin-top:10px;
+}
+li.order-items .product-name {
+    width: 60%;
+}
+li.order-items .quantity {
+    width: 20%;
+}
+li.order-items .price-field {
+    width: 20%;
+    text-align: right;
+}
+ul.wishlist_item li .product-image{
+    width:10%;
+}
+ul.wishlist_item li .product-name{
+    width:40%;
+}
+ul.wishlist_item li .product-price{
+    width:20%;
+}
+ul.wishlist_item li .add-product{
+    width:20%;
+}
+ul.wishlist_item li .delete{
+    width:10%;
 }
 /*Font faticon*/
 @font-face {
@@ -3967,27 +4002,35 @@ article.single-post blockquote p:last-child::after{
     vertical-align: middle;
 }
 .wrap-iten-in-cart .products-cart .product-image{
-    width: 100px;
+    width: 10%;
+}
+.wrap-iten-in-cart .products-cart .product-name{
+    width:45%;
+}
+.wrap-iten-in-cart .products-cart .price-field{
+    width: 10%;
+    text-align: center;
+}
+.wrap-iten-in-cart .products-cart .delete{
+    width: 10%;
+    text-align: right;
+}
+.wrap-iten-in-cart .products-cart .quantity{
+    width: 15%;
+}
+.products-cart .actions, .products-cart .delete{
+    width: 5%;
+}
+.wrap-iten-in-cart .products-cart .product-name{
+    padding-left: 20px;
 }
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
     .wrap-iten-in-cart .products-cart .product-image img{
         width: 100%;
     }
 }
-.wrap-iten-in-cart .products-cart .quantity{
-    width: 157px;
-}
-.wrap-iten-in-cart .products-cart .price-field{
-    width: 182px;
-    text-align: center;
-}
-.wrap-iten-in-cart .products-cart .delete{
-    width: 39px;
-    text-align: right;
-}
-.wrap-iten-in-cart .products-cart .product-name{
-    padding-left: 20px;
-}
+
+
 .wrap-iten-in-cart .products-cart .product-name a{
     font-size: 14px;
     line-height: 20px;
@@ -4820,7 +4863,7 @@ table.shop_attributes tbody{
 .detail .main-content-area{
     margin-bottom: 10px;
 }
-.wrap-address-billing .row-in-form{
+.wrap-address-billing p.row-in-form{
     margin: 0;
     display: block;
     float: left;
@@ -4832,6 +4875,10 @@ table.shop_attributes tbody{
 .wrap-address-billing .row-in-form.fill-wife{
     width: 100%;
     margin-right: 0px !important;
+}
+li.total_payment {
+    display: flex;
+    justify-content: space-between;
 }
 .wrap-address-billing .row-in-form label{
     font-size: 14px;
