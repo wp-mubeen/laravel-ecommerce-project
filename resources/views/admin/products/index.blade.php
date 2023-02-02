@@ -25,7 +25,8 @@
                                         <th>#</th>
                                         <th>Name</th>
                                         <th>Price</th>
-                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -36,10 +37,31 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->price }}</td>
-                                        <td>{{ $item->description }}</td>
+                                        <td>{{ $item->qty }}</td>
+                                        <td>
+                                            @if( $item->status == 1 )
+                                                Publish
+                                                <form method="POST" action="{{ url('/admin/products' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
+                                                    <input type="hidden" value="0" name="status">
+                                                    <input type="hidden" value="{{ $item->id }}" name="product_id">
+                                                    {{ method_field('post') }}
+                                                    {{ csrf_field() }}
+                                                    <button type="submit" name="submit_action" class="btn btn-danger btn-sm" title="Update Product" onclick="return confirm(&quot;Confirm Update?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Draft</button>
+                                                </form>
+                                            @elseif($item->status == 0)
+                                                Draft
+                                                <form method="POST" action="{{ url('/admin/products' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">
+                                                    <input type="hidden" value="1" name="status">
+                                                    <input type="hidden" value="{{ $item->id }}" name="product_id">
+                                                    {{ method_field('post') }}
+                                                    {{ csrf_field() }}
+                                                    <button type="submit" name="submit_action" class="btn btn-success btn-sm" title="Update Product" onclick="return confirm(&quot;Confirm Update?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Publish</button>
+                                                </form>
+                                            @endif
+                                        </td>
 
                                         <td>
-                                            <a href="{{ url('/products/' . $item->id) }}" title="View Product"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
+                                            <a href="{{ url('/product/' . $item->slug) }}" title="View Product"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
                                             <a href="{{ url('/admin/product/edit/' . $item->id ) }}" title="Edit Product"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
 
                                             <form method="POST" action="{{ url('/admin/products' . '/' . $item->id) }}" accept-charset="UTF-8" style="display:inline">

@@ -20,6 +20,7 @@
                         <div class="product-gallery">
                             <ul class="slides">
 
+
                                 <li data-thumb="assets/images/products/digital_18.jpg">
                                     <img src="{{ $product->image }}" alt="product thumbnail" />
                                 </li>
@@ -27,7 +28,6 @@
                                 <li data-thumb="assets/images/products/digital_17.jpg">
                                     <img src="{{ $product->image }}" alt="product thumbnail" />
                                 </li>
-
 
 
                             </ul>
@@ -51,7 +51,14 @@
                         </div>
                         <div class="wrap-price"><span class="product-price">${{ $product->price }}</span></div>
                         <div class="stock-info in-stock">
-                            <p class="availability">Availability: <b>In Stock</b></p>
+                            <p class="availability">Availability:
+                                <b> @if($product->qty < 1)
+                                        Out of Stock
+                                    @else
+                                        In Stock
+                                    @endif
+                                </b>
+                            </p>
                         </div>
                         <div class="quantity">
                             <span>Quantity:</span>
@@ -63,9 +70,13 @@
                             </div>
                         </div>
                         <div class="wrap-butons">
-                            <a href="{{ url('add-to-cart/'. $product->id ) }}" class="btn add-to-cart">Add to Cart</a>
+                            @if($product->qty < 1)
+                                <button class="btn btn-danger">Out of Stock</button>
+                            @else
+                                <a href="{{ url('add-to-cart/'. $product->id ) }}" class="btn add-to-cart">Add to Cart</a>
+                            @endif
+
                             <div class="wrap-btn">
-                                <a href="#" class="btn btn-compare">Add Compare</a>
                                 <a href="javascript:void(0);" productid="{{ $product->id }}" class="btn btn-wishlist addtowishlist">Add Wishlist</a>
                             </div>
                         </div>
@@ -109,13 +120,13 @@
 
             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 sitebar">
                 <div class="widget mercado-widget widget-product">
-                <x-product.popular-products popular="{{ $product->cate_id }}" />
+               <!-- <x-product.popular-products popular="{{ $product->cate_id }}" /> -->
                 </div>
             </div><!--end sitebar-->
 
             <div class="single-advance-box col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="wrap-show-advance-info-box style-1 box-in-site">
-                    <x-product.related related="{{ $product->cate_id }}" />
+                 <!--   <x-product.related related="{{ $product->cate_id }}" /> -->
                 </div>
             </div> <!-- end related wrr -->
 

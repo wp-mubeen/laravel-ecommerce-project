@@ -17,5 +17,8 @@ class ModelOrderPaymentDetail extends Model
         'card_number',
         'total_amount',
         'transaction_id',
+        'payment_status',
     ];
+
+
 }

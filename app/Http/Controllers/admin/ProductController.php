@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\helpers\Custom;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddProductRequest;
-use App\Models\CartModel;
 use App\Models\ModelCategories;
 use App\Models\ModelComments;
 use App\Models\ModelProducts;
@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
 
 class ProductController extends Controller
 {
@@ -27,13 +26,33 @@ class ProductController extends Controller
     public function index()
     {
         $this->authorize('view',User::class);
-        $products = ModelProducts::paginate(10);
+        $products = ModelProducts::orderBy('id','desc')->paginate(10);
 
         $user = auth()->user();
 
 
         return view ('admin.products.index',['products' => $products, 'user' => $user  ]);
     }
+
+    public function GetProductsByCategory(Request $request, $slug){
+        $perpage = $request['per-page'];
+        if(empty($perpage)){
+            $perpage = 12;
+        }
+        $allproducts = DB::table('products')
+            ->join('categories', 'categories.id', '=', 'products.cate_id')
+            ->where('categories.slug','=', $slug )
+            ->where('products.status', '=', '1')
+            ->select('products.*')
+            ->orderBy('products.id', 'desc')
+            ->paginate($perpage);
+
+        $Categories = DB::table('categories')->where('parent_catg','=', 0 )->get();
+
+        return view ('products.category.products-category',['products' => $allproducts , 'Categories' => $Categories , 'productcategory' => $slug ]);
+
+    }
+
 
     public function cart(){
         return view('cart');
@@ -131,6 +150,23 @@ class ProductController extends Controller
             }
 
             session()->flash('success', 'Product removed successfully');
+        }
+    }
+
+    public function updatestatus(Request $request){
+        //dd($request);
+        if(isset($request['submit_action'])){
+            $status = $request['status'];
+            $id = $request['product_id'];
+
+            $product = ModelProducts::find($id);
+
+            $data = [
+                'status' => $status,
+            ];
+
+            $product->update($data);
+            return redirect(url('/admin/products'))->with('message', 'Comment Updated!');
         }
     }
 
@@ -238,6 +274,11 @@ class ProductController extends Controller
      */
     public function store(AddProductRequest $request)
     {
+        if(isset($request['selling_price'])){
+            $validator = $request->validate([
+                'price' => ['required','numeric','gt:selling_price'],
+            ]);
+        }
        /* $validator = $request->validate([
             'name' => 'required',
             'price' => 'required',
@@ -257,15 +298,16 @@ class ProductController extends Controller
 
             $fileUrl = $fileobject->getLinkTarget();
 
-        }else{
-            $fileUrl = '';
+            $urlfile = url($location.'/'.$filename);
+            $request->request->add(['image' => $urlfile]);
+
         }
 
         $ptitle = str_replace(' ', '-', $request['name']);
         // convert the string to all lowercase
         $p_slug = strtolower($ptitle);
 
-        $request->request->add(['image' => $location.'/'.$filename]);
+
         $request->request->add(['slug' => $p_slug ]);
 
         $input = $request->all();
@@ -336,6 +378,24 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $this->authorize('update',User::class);
+
+        if($request->file('product_img')) {
+            $file = $request->file('product_img');
+            $filename = time().'_'.$file->getClientOriginalName();
+
+            // File upload location
+            $location = 'uploads/products';
+
+            // Upload file
+            $fileobject = $file->move($location,$filename);
+
+
+            $fileUrl = $fileobject->getLinkTarget();
+
+            $urlfile = url($location.'/'.$filename);
+            $request->request->add(['image' => $urlfile]);
+
+        }
 
         $product = ModelProducts::find($id);
         $input = $request->all();

@@ -12,6 +12,7 @@ class ModelOrder extends Model
     protected $table = 'orders';
     protected $primaryKey = 'id';
     protected $fillable = [
+        'userid',
         'fname',
         'lname',
         'email',
@@ -25,4 +26,12 @@ class ModelOrder extends Model
         'message',
         'tracking_no',
     ];
+
+    public function getallitems(){
+        return $this->hasMany(ModelOrderitems::class, 'order_id');
+    }
+
+    public function getorderpaymentinfo(){
+        return $this->hasOne(ModelOrderPaymentDetail::class,'orderid');
+    }
 }

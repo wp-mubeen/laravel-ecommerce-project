@@ -29,6 +29,8 @@ class OrderCreation extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.ordercreation');
+        return $this->markdown('emails.ordercreation')->with([
+            'name' => $this->name
+        ]);
     }
 }

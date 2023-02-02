@@ -20,6 +20,7 @@ class CreateOrderPaymentDetail extends Migration
             $table->string('card_number')->nullable();
             $table->string('total_amount');
             $table->string('transaction_id')->nullable();
+            $table->string('payment_status')->nullable();
             $table->timestamps();
         });
     }

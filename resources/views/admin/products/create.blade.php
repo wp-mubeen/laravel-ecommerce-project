@@ -72,6 +72,7 @@
                           <input type="text" value="{{ old('selling_price') }}" name="selling_price" id="sell_price" class="form-control">
                       </div>
                   </div>
+
                   <div class="form-group">
                       <label for="about" class="col-sm-2 control-label">Upload Image</label>
                       <div class="col-sm-9">
@@ -86,13 +87,24 @@
                       </div>
                   </div>
                   <div class="form-group">
+                      <label class="col-sm-2 control-label">Sale</label>
+                      <div class="col-sm-3">
+                          <label class="radio-inline">
+                              <input type="radio"  @if( old('sale') == "yes") checked @endif  name="sale"  value="yes"> Yes
+                          </label>
+                          <label class="radio-inline">
+                              <input type="radio" name="sale"  @if( old('sale') == "no") checked @endif value="no"> No
+                          </label>
+                      </div>
+                  </div>
+                  <div class="form-group">
                       <label class="col-sm-2 control-label">Trending</label>
                       <div class="col-sm-3">
                           <label class="radio-inline">
-                              <input type="radio"  name="trending"  value="1"> Yes
+                              <input type="radio"  name="trending" @if( old('trending') == "1") checked @endif  value="1"> Yes
                           </label>
                           <label class="radio-inline">
-                              <input type="radio" name="trending"  value="0"> No
+                              <input type="radio" name="trending"  @if( old('trending') == "0") checked @endif value="0"> No
                           </label>
                       </div>
                   </div>
@@ -100,10 +112,10 @@
                       <label class="col-sm-2 control-label">Status</label>
                       <div class="col-sm-9">
                           <label class="radio-inline">
-                              <input type="radio" name="status"  value="1"> Publish
+                              <input type="radio" name="status" @if( old('status') == "1") checked @endif  value="1"> Publish
                           </label>
                           <label class="radio-inline">
-                              <input type="radio" name="status"  value="0"> Draft
+                              <input type="radio" name="status"  @if( old('status') == "0") checked @endif  value="0"> Draft
                           </label>
                       </div>
                   </div>

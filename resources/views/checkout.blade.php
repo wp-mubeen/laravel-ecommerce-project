@@ -30,7 +30,6 @@
         </ul>
     </div>
     <div class=" main-content-area">
-
         @if ( session('cart') )
             <div class="col-md-8">
                 <div class="wrap-address-billing">
@@ -42,39 +41,39 @@
                         {!! csrf_field() !!}
                         <p class="row-in-form">
                             <label for="fname">first name<span>*</span></label>
-                            <input id="fname" class="@error('fname') is-invalid @enderror form-control"  type="text" name="fname" value="{{ old('fname') }}" placeholder="Your name">
+                            <input id="fname" class="@error('fname') is-invalid @enderror form-control"  type="text" name="fname" value="@if($userinfo){{ old('fname', $userinfo->first_name )  }}@endif" placeholder="Your first name">
                         </p>
                         <p class="row-in-form">
                             <label for="lname">last name<span>*</span></label>
-                            <input id="lname" class="@error('lname') is-invalid @enderror form-control" type="text" name="lname" value="{{ old('lname') }}" placeholder="Your last name">
+                            <input id="lname" class="@error('lname') is-invalid @enderror form-control" type="text" name="lname" value="@if($userinfo){{ old('lname', $userinfo->last_name ) }}@endif" placeholder="Your last name">
                         </p>
                         <p class="row-in-form">
                             <label for="email">Email Addreess:</label>
-                            <input id="email" class="@error('email') is-invalid @enderror form-control" type="email" name="email" value="{{ old('email') }}" placeholder="Type your email">
+                            <input id="email" class="@error('email') is-invalid @enderror form-control" type="email" name="email" value="@if($userinfo){{ old('email', $userinfo->email ) }}@endif" placeholder="Type your email">
                         </p>
                         <p class="row-in-form">
                             <label for="phone">Phone number<span>*</span></label>
-                            <input id="phone" type="number" class="@error('phone_number') is-invalid @enderror form-control" name="phone_number" value="{{ old('phone_number') }}" placeholder="10 digits format">
+                            <input id="phone" type="number" class="@error('phone_number') is-invalid @enderror form-control" name="phone_number" value="@if($userinfo){{ old('phone_number', $userinfo->phone_number ) }}@endif" placeholder="10 digits format">
                         </p>
                         <p class="row-in-form">
                             <label for="add">Address:</label>
-                            <input id="add" type="text" class="@error('address') is-invalid @enderror form-control" name="address" value="{{ old('address') }}" placeholder="Street at apartment number">
+                            <input id="add" type="text" class="@error('address') is-invalid @enderror form-control" name="address" value="@if($userinfo){{ old('address', $userinfo->billing_address ) }}@endif" placeholder="Street at apartment number">
                         </p>
                         <p class="row-in-form">
                             <label for="country">Country<span>*</span></label>
-                            <input id="country" type="text" class="@error('country') is-invalid @enderror form-control" name="country" value="{{ old('country') }}" placeholder="United States">
+                            <input id="country" type="text" class="@error('country') is-invalid @enderror form-control" name="country" value="@if($userinfo){{ old('country', $userinfo->country ) }}@endif" placeholder="United States">
                         </p>
                         <p class="row-in-form">
                             <label for="country">State<span>*</span></label>
-                            <input id="country" type="text" class="@error('state') is-invalid @enderror form-control" name="state" value="{{ old('state') }}" placeholder="United States">
+                            <input id="country" type="text" class="@error('state') is-invalid @enderror form-control" name="state" value="@if($userinfo){{ old('state', $userinfo->state ) }}@endif" placeholder="United States">
                         </p>
                         <p class="row-in-form">
                             <label for="zip-code">Postcode / ZIP:</label>
-                            <input id="zip-code" type="number" class="@error('postcode') is-invalid @enderror form-control" name="postcode" value="{{ old('postcode') }}" placeholder="Your postal code">
+                            <input id="zip-code" type="number" class="@error('postcode') is-invalid @enderror form-control" name="postcode" value="@if($userinfo){{ old('postcode', $userinfo->zip_code ) }}@endif" placeholder="Your postal code">
                         </p>
                         <p class="row-in-form">
                             <label for="city">Town / City<span>*</span></label>
-                            <input id="city" type="text" class="@error('city') is-invalid @enderror form-control" name="city" value="{{ old('city') }}" placeholder="City name">
+                            <input id="city" type="text" class="@error('city') is-invalid @enderror form-control" name="city" value="@if($userinfo){{ old('city', $userinfo->city ) }}@endif" placeholder="City name">
                         </p>
                         <p class="row-in-form">
                             <label for="country">Comments<span>*</span></label>

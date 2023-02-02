@@ -17,4 +17,9 @@ class ModelOrderitems extends Model
         'price',
         'quantity',
     ];
+
+    public function getorder(){
+        return $this->belongsTo(ModelOrder::class);
+    }
+
 }

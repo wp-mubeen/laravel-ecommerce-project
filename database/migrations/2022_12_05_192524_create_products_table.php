@@ -28,6 +28,7 @@ class CreateProductsTable extends Migration
             $table->string("qty")->nullable(true);
             $table->string("tax")->nullable(true);
             $table->tinyInteger("status");
+            $table->string("sale")->nullable(true);
             $table->tinyInteger("trending")->nullable(true);
             $table->mediumText("meta_title")->nullable(true);
             $table->mediumText("meta_keywords")->nullable(true);

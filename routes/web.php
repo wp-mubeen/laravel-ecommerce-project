@@ -10,8 +10,8 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\WishlistController;
 use App\Models\ModelProducts;
 use App\Models\User;
-use App\Mail\WelcomeMail;
 use Illuminate\Support\Facades\Mail;
+use Yajra\DataTables\Services\DataTable;
 
 
 /*
@@ -30,6 +30,7 @@ Route::get('/swagger',function (){
 });
 Route::get('/', function () {
     return view('welcome');
+
 })->middleware('check-year');
 
 Route::get('/about-us', function () {
@@ -48,17 +49,13 @@ Route::get('/logout', function(){
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::get('/email',function(){
-    Mail::to('mubeeniqbal82@gmail.com')->send(new WelcomeMail() );
-    return new WelcomeMail();
-} );
-
 // put method to update the resource
 // post method to create the resource
 Route::post('/profile/', [UserController::class, 'update']);
 Route::get('/profile', [UserController::class, 'profile'])->middleware('auth');
 
 Route::post('/add-to-wishlist', [WishlistController::class, 'add']);
+
 
 Route::middleware(['auth'])->group(function (){
     Route::post('/add-to-wishlist', [WishlistController::class, 'add']);
@@ -67,6 +64,11 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/checkout', [CheckoutController::class, 'index']);
     Route::get('/thank-you', [CheckoutController::class, 'thankyou']);
     Route::post('/place-order', [CheckoutController::class, 'PlaceOrder']);
+
+    Route::get('/order-detail/{id}', [CheckoutController::class,'OrderDetail']);
+    Route::post('/order-detail/{id}', [CheckoutController::class,'UpdateOrder']);
+
+
 });
 
 Route::group(['middleware' => 'auth'],function (){
@@ -75,19 +77,27 @@ Route::group(['middleware' => 'auth'],function (){
         'middleware' => 'is_admin',
         'as' => 'admin.',
     ],function (){
+
         Route::get('/profile', [UserController::class,'profile']);
         Route::get('/', [AdminController::class,'index']);
         Route::get('/all-users', [AdminController::class,'listUsers']);
+       // Route::delete('/users/{id}', [AdminController::class,'destroy']);
+        Route::get('/users/{id}', [AdminController::class,'deleteuser']);
+
+        Route::get('all-orders',[AdminController::class,'AllOrders']);
+        Route::get('/order/{id}', [AdminController::class,'DeleteOrder']);
 
 
         Route::get('/all-comments', [ProductController::class,'ListComments']);
         Route::post('/all-comments',[ProductController::class,'updateComment']);
 
+        Route::get('/products-all',[ProductController::class,'allproducts']);
         Route::get('/products',[ProductController::class,'index']);
         Route::post('/products',[ProductController::class,'store']);
         Route::get('/product/add',[ProductController::class,'create'])->name('create');
         Route::get('/product/edit/{id}',[ProductController::class,'edit'])->where(['id'=>'[0-9]+']);
         Route::patch('/product/{id}',[ProductController::class,'update']);
+        Route::post('/products/{id}',[ProductController::class,'updatestatus']);
 
         Route::delete('products/{id}',[ProductController::class,'destroy']);
 
@@ -99,6 +109,7 @@ Route::group(['middleware' => 'auth'],function (){
         Route::patch('/categories/{id}',[CategoriesController::class,'update']);
 
         Route::delete('categories/{id}',[CategoriesController::class,'destroy']);
+
     });
 
 
@@ -116,6 +127,9 @@ Route::delete('/remove-from-cart', [ProductController::class,'RemovedFromCart'])
 
 //public root
 Route::get('/products',[ProductController::class,'shop']);
+Route::get('/products/category/{slug}',[ProductController::class,'GetProductsByCategory']);
+
+
 
 
 

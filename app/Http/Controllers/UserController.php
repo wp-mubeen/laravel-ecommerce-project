@@ -1,33 +1,35 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\ModelOrder;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
+use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
-    public function listUsers(){
-        $users = User::all();
-       return response()->json($users);
-    }
-    public function profile(){
+
+    public function profile(Request $request){
         Auth::routes();
         $userid =  Auth::user()->id;
         $checkadmin =  Auth::user()->is_admin;
+        $allorders = ModelOrder::where('userid',$userid)->paginate(5);
+       // $allorders = ModelOrder::orderBy('id','desc')->paginate(10);
 
         $userinfo = User::find($userid, 'picture');
         $urlImg =  $userinfo->picture;
 
         $user = auth()->user();
 
+
         if( $checkadmin == 1 ){
-            return view ('admin.profile',['urlImg' => $urlImg, 'user' => $user]);
+            return view ('admin.profile',['urlImg' => $urlImg, 'user' => $user ]);
         }else{
-            return view ('dashboards.users.profile',compact('urlImg'));
+            return view ('dashboards.users.profile',compact('urlImg', 'allorders'));
         }
 
 
@@ -69,4 +71,5 @@ class UserController extends Controller
         $user->update($data);
         return back()->with('success','Profile Updated successfully!');
     }
+
 }

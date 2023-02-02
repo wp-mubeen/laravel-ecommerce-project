@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\helpers\Custom;
 use App\Models\ModelOrder;
 use App\Models\ModelOrderitems;
 use App\Models\ModelOrderPaymentDetail;
 use App\Models\ModelProducts;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 use Session;
 use Stripe;
 use PDF;
-use App\Mail\OrderCreation;
-
+use Illuminate\Mail\Mailables\Attachment;
+use Mail;
 
 class CheckoutController extends Controller
 {
@@ -24,7 +27,12 @@ class CheckoutController extends Controller
      */
     public function index()
     {
-        return view('checkout');
+        $uid = Auth::id();
+        $user = User::find($uid);
+        $userinfo = $user->profile()->first();
+
+
+        return view('checkout',['userinfo'=> $userinfo]);
     }
 
     public function thankyou()
@@ -36,6 +44,7 @@ class CheckoutController extends Controller
 
     public function PlaceOrder(Request $request)
     {
+
         if($request['payment-method'] == "card") {
             $validator = $request->validate([
                 'stripeToken' => 'required',
@@ -57,6 +66,20 @@ class CheckoutController extends Controller
 
         $uid = Auth::id();
 
+        $profiledata = [
+            'user_id'=> $uid,
+            'first_name'=> $request['fname'],
+            'last_name'=> $request['lname'],
+            'email'=> $request['email'],
+            'phone_number'=> $request['phone_number'],
+            'billing_address'=> $request['address'],
+            'country'=> $request['country'],
+            'state'=> $request['state'],
+            'city'=> $request['city'],
+            'zip_code'=> $request['postcode'],
+        ];
+        Custom::SaveProfile( $profiledata , $uid);
+
         if(empty($uid)){
             $uid = 0;
         }
@@ -65,6 +88,7 @@ class CheckoutController extends Controller
         $input = $request->all();
 
         $data = [
+            'userid'=> $uid,
             'fname'=> $request['fname'],
             'lname'=> $request['lname'],
             'email'=> $request['email'],
@@ -89,12 +113,14 @@ class CheckoutController extends Controller
         if($request['payment-method'] == "card") {
             Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
             $res = Stripe\Charge::create([
-                "amount" => $request['total_payment'],
+                "amount" => $request['total_payment'] * 100,
                 "currency" => "usd",
                 "source" => $request->stripeToken,
                 "description" => "Making test payment."
             ]);
+
             $chargeID = $res['id'];
+            $paymentstatus = $res['status'];
 
             $paymentdetail = [
                 'orderid' => $orderId,
@@ -102,6 +128,7 @@ class CheckoutController extends Controller
                 'card_number' => $request['card_number'],
                 'total_amount' => $request['total_payment'],
                 'transaction_id' => $chargeID,
+                'payment_status' => $paymentstatus,
             ];
             ModelOrderPaymentDetail::create($paymentdetail);
         }elseif($request['payment-method'] == "COD"){
@@ -145,36 +172,80 @@ class CheckoutController extends Controller
                 'city'=> $request['city'],
                 'postcode'=> $request['postcode'],
             ];
+
+
+
             $pdf = PDF::loadView('invoice-pdf', $data);
 
-            Mail::to('mubeeniqbal82@gmail.com')->send(new OrderCreation($name));
 
-            Mail::send('emails.ordercreation', $data, function($message)use($data, $pdf){
+           Mail::send('emails.ordercreation', $data, function($message)use($data, $pdf) {
+               // $message->to($data["email"])
                 $message->to('mubeeniqbal82@gmail.com')
-                ->subject( 'Order detail' )
-                    ->attachData($pdf->output(), "invoice.pdf");
+                    ->subject( 'Order detail' )
+                    ->attachData($pdf->output(),"order-invoice.pdf");
             });
 
 
 
-            /*Mail::send('mail', $data, function($message)use($data, $pdf) {
-                $message->to('mubeeniqbal82@gmail.com', 'mubeeniqbal82@gmail.com')
-                    ->subject( 'Order detail' )
-                    ->attachData($pdf->output(), "invoice.pdf");
-            });*/
-
+            //Mail::to('mubeeniqbal82@gmail.com')->send(new OrderCreation($name));
 
 
             session()->forget('cart');
 
-
-
             return redirect(url('/thank-you') )->with('message', 'Order placed successfully!');
+        }
+
+    }
+
+    public function OrderDetail($orderId)
+    {
+        $order = ModelOrder::find($orderId);
+        if(!$order){
+            abort(404);
+        }
+        $user = Auth::user();
+        $userlevel = $user->is_admin;
+
+        $uid = Auth::id();
+        $userorder = ModelOrder::where('userid',$uid)->where('id',$orderId)->get();
+
+        if($userlevel == 1){
+            $orderitems = DB::table('order_items')
+                ->join('orders', 'orders.id', '=', 'order_items.order_id')
+                ->join('products', 'products.id', '=', 'order_items.product_id')
+                ->join('order_payment_detail', 'order_payment_detail.orderid','=','orders.id')
+                ->where('orders.id', $orderId)
+                ->select('order_payment_detail.*','products.name','products.slug','products.image','order_items.*')
+                ->get();
+
+            $paymentdetail = $order->getorderpaymentinfo;
+
+            return view('dashboards.orderdetail.detail',[ 'userlevel' => $userlevel , 'orderitems' => $orderitems,'order'=> $order, 'paymentdetail'=> $paymentdetail ] );
+
+        }elseif( count($userorder) >= 1 ){
+            if($order){
+                // $orderitems = ModelOrder::find($orderId)->getallitems; // commit one to many relationship query
+                $orderitems = DB::table('order_items')
+                    ->join('orders', 'orders.id', '=', 'order_items.order_id')
+                    ->join('products', 'products.id', '=', 'order_items.product_id')
+                    ->join('order_payment_detail', 'order_payment_detail.orderid','=','orders.id')
+                    ->where('orders.id', $orderId)
+                    ->select('order_payment_detail.*','products.name','products.slug','products.image','order_items.*')
+                    ->get();
+
+                $paymentdetail = $order->getorderpaymentinfo;
+
+                return view('dashboards.orderdetail.detail',[ 'userlevel' => $userlevel , 'orderitems' => $orderitems,'order'=> $order, 'paymentdetail'=> $paymentdetail ] );
+            }else{
+                abort(404);
+            }
         }
 
 
 
+
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -216,9 +287,12 @@ class CheckoutController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function UpdateOrder(Request $request)
     {
-        //
+        $id = $request['orderid'];
+        ModelOrder::where('id',$id)->update(['status'=>'1']);
+
+        return redirect()->back()->with('success', 'Order Completed successfully!');
     }
 
     /**

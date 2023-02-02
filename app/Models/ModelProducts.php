@@ -28,10 +28,23 @@ class ModelProducts extends Model
         'tax',
         'status',
         'trending',
+        'sale',
         'meta_title',
         'meta_keywords',
         'meta_description',
     ];
+
+
+    public function getImageAttribute($value)
+    {
+
+        if($value){
+            return url($value);
+        }else{
+            return asset('assets/images/products/no-product-img.png');
+        }
+    }
+
 
 
 

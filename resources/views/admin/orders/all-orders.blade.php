@@ -17,10 +17,11 @@
                     <thead>
                     <tr>
                         <th>Id</th>
-                        <th>Name</th>
+                        <th>User Id</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
                         <th>Email</th>
-                        <th>Admin</th>
-                        <th>Created at</th>
+                        <th>Phone Number</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -47,13 +48,14 @@
         $('#datatable-crud').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ url('admin/all-users') }}",
+            ajax: "{{ url('/admin/all-orders') }}",
             columns: [
                 { data: 'id', name: 'id' },
-                { data: 'name', name: 'name' },
+                { data: 'userid', name: 'userid' },
+                { data: 'fname', name: 'fname' },
+                { data: 'lname', name: 'lname' },
                 { data: 'email', name: 'email' },
-                { data: 'is_admin', name: 'is_admin' },
-                { data: 'created_at', name: 'created_at' },
+                { data: 'phone_number', name: 'phone_number' },
                 {data: 'action', orderable: false},
             ],
             order: [[0, 'desc']]

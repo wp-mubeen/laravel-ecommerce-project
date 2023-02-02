@@ -80,6 +80,7 @@
                             </div>
                         </div>
                     </form>
+
                 </div>
             </div>
 		</div>
@@ -89,4 +90,6 @@
 <script src="{{ asset('assets/admin/js/raphael-min.js') }}"></script>
 <script src="{{ asset('assets/admin/js/morris.min.js') }}"></script>
 <script src="{{ asset('assets/admin/js/bootstrap.min.js') }}"></script>
+
+
 @endsection

@@ -37,7 +37,7 @@
                     <a href="{{ url('admin/categories') }}"><i class="fa fa-fw fa-table"></i> Categories</a>
                 </li>
                 <li>
-                    <a href="{{ url('admin/orders') }}"><i class="fa fa-fw fa-desktop"></i> Orders</a>
+                    <a href="{{ url('admin/all-orders') }}"><i class="fa fa-fw fa-desktop"></i> Orders</a>
                 </li>
                 <li>
                     <a href="{{ url('admin/all-users') }}"><i class="fa fa-fw fa-edit"></i> Users</a>

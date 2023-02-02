@@ -17,37 +17,28 @@
             <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12 main-content-area">
 
                 <div class="banner-shop">
-                    <figure><img src="assets/images/shop-banner.jpg" alt=""></figure>
+                    <figure><img src="{{ asset('assets/images/shop-banner.jpg') }}" alt=""></figure>
                 </div>
 
                 <div class="wrap-shop-control">
 
-                    <h1 class="shop-title">All Products</h1>
+                    <h1 class="shop-title">All {{ $productcategory }}</h1>
 
                     <div class="wrap-right">
-
-                        <div class="sort-item orderby ">
-                            <select name="orderby" class="use-chosen" >
-                                <option value="menu_order" selected="selected">Default sorting</option>
-                                <option value="popularity">Sort by popularity</option>
-                                <option value="rating">Sort by average rating</option>
-                                <option value="date">Sort by newness</option>
-                                <option value="price">Sort by price: low to high</option>
-                                <option value="price-desc">Sort by price: high to low</option>
-                            </select>
-                        </div>
+                        <form method="get" action="" id="submitform">
 
                         <div class="sort-item product-per-page">
-                            <select name="post-per-page" class="use-chosen" >
-                                <option value="12" selected="selected">12 per page</option>
-                                <option value="16">16 per page</option>
+                            <select name="per-page" id="select_count" class="use-chosen" >
+                                <option value="12" >12 per page</option>
+                                <option value="15">15 per page</option>
                                 <option value="18">18 per page</option>
                                 <option value="21">21 per page</option>
                                 <option value="24">24 per page</option>
+                                <option value="27">27 per page</option>
                                 <option value="30">30 per page</option>
-                                <option value="32">32 per page</option>
                             </select>
                         </div>
+                        </form>
                         <!--
                         <div class="change-display-mode">
                             <a href="#" class="grid-mode display-mode active"><i class="fa fa-th"></i>Grid</a>
@@ -59,14 +50,15 @@
                 </div><!--end wrap shop control-->
 
                 <div class="row">
-
+                    @if(count($products) >= 1)
                     <ul class="product-list grid-products equal-container">
                         @foreach($products as $product)
+
                             <li class="col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                 <div class="product product-style-3 equal-elem ">
                                     <div class="product-thumnail">
-                                        <a href="{{ url('product/'. $product->slug ) }}" title="T-Shirt Raw Hem Organic Boro Constrast Denim">
-                                            <figure><img src="{{ $product->image }}" alt="T-Shirt Raw Hem Organic Boro Constrast Denim"></figure>
+                                        <a href="{{ url('product/'. $product->slug ) }}" title="{{ $product->name }}">
+                                            <figure><img src="{{ $product->image }}" ></figure>
                                         </a>
                                     </div>
                                     <div class="product-info">
@@ -82,11 +74,10 @@
                             </li>
                         @endforeach
                         {{ $products->links() }}
-
-
-
                     </ul>
-
+                    @else
+                        <h3 class=""mt-4>No Product found!</h3>
+                    @endif
                 </div>
 
 
@@ -113,9 +104,18 @@
 
                 <div class="widget mercado-widget widget-product">
                     <x-product.popular-products popular="1" />
-                </div><!-- brand widget-->
+                </div>
 
-            </div><!--end sitebar-->
+            </div>
 
         </div><!--end row-->
+            <script>
+                jQuery(document).ready(function() {
+                    jQuery('#select_count').on('change', function() {
+                        jQuery( "#submitform" ).submit();
+
+                    });
+                });
+            </script>
+
 @endsection

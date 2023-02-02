@@ -2,7 +2,7 @@
     <span class="toggle-control">+</span>
     <ul class="sub-cate  mmmoore">
         @foreach($subcategory as $catg)
-            <li class="category-item"><a href="{{ $catg['slug'] }}" class="cate-link">{{ $catg['name'] }}</a></li>
+            <li class="category-item"><a href="{{ url('products/category/'.$catg['slug']) }}" class="cate-link">{{ $catg['name'] }}</a></li>
         @endforeach
     </ul>
 @endif

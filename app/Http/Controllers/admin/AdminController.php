@@ -4,11 +4,12 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ModelCategories;
+use App\Models\ModelOrder;
 use App\Models\ModelProducts;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
-use DataTables;
 class AdminController extends Controller
 {
     /**
@@ -33,24 +34,53 @@ class AdminController extends Controller
 
     public function listUsers(Request $request)
     {
-       // $allUsers = User::all();
+        $user = auth()->user();
+        $allUsers = User::paginate(10);
 
-        if ($request->ajax()) {
+       if ($request->ajax()) {
             $data = User::select('*');
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
 
-                    $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">View</a>';
+                    $deleteButton2 = '<form method="get" action="/admin/users/'. $row->id.'" accept-charset="UTF-8" style="display:inline">
 
-                    return $btn;
+                                            <button type="submit" class="btn btn-danger btn-sm" title="Delete User" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                        </form>';
+                    //return $updateButton." ".$deleteButton;
+                    return $deleteButton2;
+
                 })
-                ->rawColumns(['action'])
                 ->make(true);
         }
 
-        return view('admin.all-users');
-       // return view('admin.all-users',[ 'users' => $allUsers ]);
+
+
+       return view('admin.all-users',[ 'users' => $allUsers,  'user' =>$user ]);
+    }
+
+    public function AllOrders(Request $request){
+        $user = auth()->user();
+
+        if ($request->ajax()) {
+            $data = ModelOrder::select('*');
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $deleteButton1 = '<a href="/order-detail/'. $row->id.'" ><button type="button" class="btn btn-success btn-sm" title="View User" >View</button></a>';
+                    $deleteButton2 = '<form method="get" action="/admin/order/'. $row->id.'" accept-charset="UTF-8" style="display:inline">
+
+                                            <button type="submit" class="btn btn-danger btn-sm" title="Delete User" onclick="return confirm(&quot;Confirm delete?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+                                        </form>';
+                    return $deleteButton1.' '.$deleteButton2;
+
+                })
+                ->make(true);
+        }
+
+
+
+        return view('admin.orders.all-orders',[   'user' =>$user ]);
     }
 
 
@@ -109,6 +139,19 @@ class AdminController extends Controller
         //
     }
 
+
+    public function deleteuser($id)
+    {
+        User::destroy($id);
+        return redirect()->back()->with('message', 'User deleted!');
+    }
+
+    public function DeleteOrder($id)
+    {
+        ModelOrder::destroy($id);
+        return redirect()->back()->with('message', 'Order deleted!');
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -117,6 +160,7 @@ class AdminController extends Controller
      */
     public function destroy($id)
     {
-        //
+        User::destroy($id);
+        return redirect()->back()->with('message', 'User deleted!');
     }
 }

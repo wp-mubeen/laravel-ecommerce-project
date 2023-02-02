@@ -1013,7 +1013,7 @@ li.menu-item .nav-label.sale-label::before{
 }
 .wrap-banner.banner-style-3 .sub-title::first-letter{
     font-weight: 600;
-    color: red;
+    color: #ff0000;
     text-decoration: line-through;
 }
 .wrap-banner.banner-style-3 .desc{
@@ -1646,6 +1646,20 @@ li.menu-item .nav-label.sale-label::before{
     display: inline-block;
     width: 100%;
 }
+table.shop_table.my_account_orders {
+    width: 100%;
+}
+table.shop_table.my_account_orders thead {
+    background: #444444;
+    color: white;
+}
+table.shop_table.my_account_orders tr:nth-child(odd){
+    background-color:#80808036;
+}
+table.shop_table.my_account_orders td, table.shop_table.my_account_orders th {
+    padding: 10px;
+}
+
 .tab-style-1 .tab-control .tab-control-item{
     display: inline-block;
     float: left;

@@ -72,10 +72,18 @@
                                 <input type="text" value="{{$productSingle->selling_price}}" name="selling_price" id="sell_price" class="form-control">
                             </div>
                         </div>
+                        @if($productSingle->image)
+                            <div class="form-group">
+                                <label for="about" class="col-sm-2 control-label">Uploaded Image</label>
+                                <div class="col-sm-9">
+                                    <img src="{{$productSingle->image}}" style="max-width:75px;">
+                                </div>
+                            </div>
+                        @endif
                         <div class="form-group">
-                            <label for="about" class="col-sm-2 control-label">Upload Image</label>
+                            <label for="about" class="col-sm-2 control-label">Upload New Image</label>
                             <div class="col-sm-9">
-                                <input type="hidden" name="product_img" value="{{$productSingle->product_img}}" >
+                                <input type="hidden" name="product_img" value="{{$productSingle->image}}" >
                                 <input type="file" name="product_img" id="prd_img" class="form-control">
                             </div>
                         </div>
@@ -86,13 +94,24 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-2 control-label">Sale</label>
+                            <div class="col-sm-3">
+                                <label class="radio-inline">
+                                    <input type="radio" name="sale" @if($productSingle->sale == "yes") checked @endif value="1"> Yes
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="sale"  @if($productSingle->sale == "no") checked @endif value="0"> No
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-2 control-label">Trending</label>
                             <div class="col-sm-3">
                                 <label class="radio-inline">
-                                    <input type="radio" name="trending"  value="1"> Yes
+                                    <input type="radio" name="trending" @if($productSingle->trending == 1) checked @endif value="1"> Yes
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="trending"  value="0"> No
+                                    <input type="radio" name="trending"  @if($productSingle->trending == 0) checked @endif value="0"> No
                                 </label>
                             </div>
                         </div>
@@ -100,10 +119,10 @@
                             <label class="col-sm-2 control-label">Status</label>
                             <div class="col-sm-9">
                                 <label class="radio-inline">
-                                    <input type="radio" name="status"  value="1"> Publish
+                                    <input type="radio" name="status" @if($productSingle->status == 1) checked @endif value="1"> Publish
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="status"  value="0"> Draft
+                                    <input type="radio" name="status"   @if($productSingle->status == 0) checked @endif value="0"> Draft
                                 </label>
                             </div>
                         </div>
